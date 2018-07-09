@@ -1,0 +1,23 @@
+The Dockerfile:
+Docker can build images automatically by reading the instructions from a Dockerfile. 
+A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. 
+Using docker build users can create an automated build that executes several command-line instructions in succession.
+
+Sample Example:
+FROM alpine:latest  # The FROM command tells Docker which base you would like to use for your image. Ex: Iamge:alpine && releasetag: latest
+LABEL maintainer="Russ McKendrick <russ@mckendrick.io>"  #The LABEL command can be used to add extra information to the image. 
+                                                          This information can be anything from a version number to a description.
+LABEL description="This example Dockerfile installs NGINX." #You can view the containers' labels with the docker inspect command:
+                                                            $ docker image inspect <IMAGE_ID> 
+RUN apk add --update nginx && \
+        rm -rf /var/cache/apk/* && \
+        mkdir -p /tmp/nginx/
+
+COPY files/nginx.conf /etc/nginx/nginx.conf
+COPY files/default.conf /etc/nginx/conf.d/default.conf
+ADD files/html.tar.gz /usr/share/nginx/
+
+EXPOSE 80/tcp
+
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]
